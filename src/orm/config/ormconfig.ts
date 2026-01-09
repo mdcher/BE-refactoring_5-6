@@ -20,6 +20,10 @@ const config: ConnectionOptions = {
     subscribersDir: 'src/orm/subscriber',
   },
   namingStrategy: new SnakeNamingStrategy(),
+  connectTimeoutMS: 10000,
+  extra: {
+    connectionTimeoutMillis: 10000,
+  },
 };
 
 export = config;

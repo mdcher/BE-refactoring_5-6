@@ -5,39 +5,35 @@ import { BookStatus } from '../../../orm/enums/BookStatus';
 import { LanguageEnum } from '../../../orm/enums/Language';
 import { CustomError } from '../../../utils/response/custom-error/CustomError';
 
-export const validatorCreateBook = (req: Request, _res: Response, next: NextFunction) => {
+export const validatorUpdateBook = (req: Request, _res: Response, next: NextFunction) => {
   const { title, year, publisher, language, status, location } = req.body;
   const errorsValidation = [];
 
-  // Перевірка title
-  if (!title || validator.isEmpty(title)) {
-    errorsValidation.push({ title: 'Title is required' });
+  // Перевіряємо тільки якщо поля передані (часткове оновлення)
+
+  if (title !== undefined && validator.isEmpty(title)) {
+    errorsValidation.push({ title: 'Title cannot be empty' });
   }
 
-  // Перевірка publisher
-  if (!publisher || validator.isEmpty(publisher)) {
-    errorsValidation.push({ publisher: 'Publisher is required' });
+  if (publisher !== undefined && validator.isEmpty(publisher)) {
+    errorsValidation.push({ publisher: 'Publisher cannot be empty' });
   }
 
-  // Перевірка year
-  if (!year || !validator.isInt(String(year), { min: 1900, max: new Date().getFullYear() + 1 })) {
+  if (year !== undefined && !validator.isInt(String(year), { min: 1900, max: new Date().getFullYear() + 1 })) {
     errorsValidation.push({ year: 'Year must be a valid number (1900 - current year + 1)' });
   }
 
-  // Перевірка location
-  if (!location || validator.isEmpty(location)) {
-    errorsValidation.push({ location: 'Location is required' });
+  if (location !== undefined && validator.isEmpty(location)) {
+    errorsValidation.push({ location: 'Location cannot be empty' });
   }
 
-  // Перевірка language (enum)
-  if (!language || !Object.values(LanguageEnum).includes(language)) {
+  if (language !== undefined && !Object.values(LanguageEnum).includes(language)) {
     errorsValidation.push({
       language: `Language must be one of: ${Object.values(LanguageEnum).join(', ')}`,
     });
   }
 
-  // Перевірка status (enum)
-  if (!status || !Object.values(BookStatus).includes(status)) {
+  if (status !== undefined && !Object.values(BookStatus).includes(status)) {
     errorsValidation.push({
       status: `Status must be one of: ${Object.values(BookStatus).join(', ')}`,
     });

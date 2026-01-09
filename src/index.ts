@@ -32,15 +32,23 @@ try {
 }
 app.use(morgan('combined'));
 
-app.use('/', routes);
+app.use('/api', routes);
 
 app.use(errorHandler);
 
 const port = process.env.PORT || 4000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
 
 (async () => {
-  await dbCreateConnection();
+  try {
+    console.log('🔌 Connecting to database...');
+    await dbCreateConnection();
+    console.log('✅ Database connected successfully');
+
+    app.listen(port, () => {
+      console.log(`🚀 Server running on port ${port}`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error.message);
+    process.exit(1);
+  }
 })();

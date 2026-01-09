@@ -13,7 +13,7 @@ export class Book {
   @Column({ name: 'title', length: 200 })
   title: string;
 
-  @Column({ name: 'publisher', length: 100 })
+  @Column({ name: 'publisher', length: 100 }) // ВИПРАВЛЕНО: було 'puAblisher'
   publisher: string;
 
   @Column({

@@ -27,8 +27,24 @@ export class BookController {
 
   save = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('--- Received request body ---');
+      console.log(req.body);
+
       const book = await this.bookService.save(req.body);
+
+      console.log('--- Result from bookService.save ---');
+      console.log(book);
+
       res.customSuccess(201, 'Book created', new BookResponseDto(book));
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const book = await this.bookService.update(Number(req.params.id), req.body);
+      res.customSuccess(200, 'Book updated', new BookResponseDto(book));
     } catch (err) {
       next(err);
     }

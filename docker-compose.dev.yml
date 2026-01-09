@@ -1,14 +1,13 @@
 version: '3'
 
 services:
-  db_postgres:
-    container_name: 'db_boilerplate'
+  db_boilerplate:
     image: 'postgres:14.2-alpine'
     restart: always
     env_file:
       - .env
     ports:
-      - '5432:5432'
+      - '5434:5432'
     volumes:
       - ./database/boilerplate:/var/lib/postgresql/data/
 
@@ -16,12 +15,12 @@ services:
     entrypoint: /bin/sh './scripts/be-node-dev.sh'
     env_file:
       - .env
-    ports:
-      - '4000:4000'
+    environment:
+      - PG_HOST=db_boilerplate
     depends_on:
-      - db_postgres
+      - db_boilerplate
     links:
-      - db_postgres
+      - db_boilerplate
 
   be_boilerplate_test:
     container_name: 'be_boilerplate_test'
@@ -30,11 +29,13 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - db_postgres
+      - db_boilerplate
     links:
-      - db_postgres
+      - db_boilerplate
     env_file:
       - .env
+    environment:
+      - PG_HOST=db_boilerplate
     volumes:
       - .:/app/
       - /app/node_modules
